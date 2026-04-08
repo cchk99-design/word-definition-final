@@ -31,6 +31,7 @@ const vocabData = {
 let vocabItems = [];
 let selectedIds = new Set();
 let gameQueue = [];
+let gameRecords = {}; // 紀錄提示使用狀況
 let currentIdx = 0;
 let currentFilter = "all";
 
@@ -44,23 +45,12 @@ function init() {
             });
         });
     });
-
     const filterSelect = document.getElementById('category-filter');
     categories.forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat.id; opt.textContent = cat.name;
         filterSelect.appendChild(opt);
     });
-    renderBank();
-}
-
-function adjustZoom() {
-    const val = document.getElementById('zoom-slider').value;
-    document.documentElement.style.setProperty('--card-size', val + 'px');
-}
-
-function filterCategory() {
-    currentFilter = document.getElementById('category-filter').value;
     renderBank();
 }
 
@@ -72,14 +62,16 @@ function renderBank() {
         const items = vocabItems.filter(i => i.cat === cat.id);
         if (items.length === 0) return;
 
-        const section = document.createElement('div');
-        section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:6px solid #FFCC00; padding-left:12px;">${cat.name}</h3>`;
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.innerHTML = `<h3>${cat.name}</h3><button class="select-all-btn" onclick="toggleCategory('${cat.id}')">全選 / 取消</button>`;
+        
         const grid = document.createElement('div');
         grid.className = 'grid';
         items.forEach(item => {
             const card = document.createElement('div');
             card.className = `vocab-card ${selectedIds.has(item.id) ? 'selected' : ''}`;
-            card.innerHTML = `<img src="${item.img}" onerror="this.src='https://via.placeholder.com/150?text=Missing'"><div class="label-text">${item.name}</div>`;
+            card.innerHTML = `<img src="${item.img}" onerror="this.src='https://via.placeholder.com/150'"><div class="label-text">${item.name}</div>`;
             card.onclick = () => {
                 selectedIds.has(item.id) ? selectedIds.delete(item.id) : selectedIds.add(item.id);
                 card.classList.toggle('selected');
@@ -87,38 +79,56 @@ function renderBank() {
             };
             grid.appendChild(card);
         });
-        section.appendChild(grid);
-        container.appendChild(section);
+        container.appendChild(header);
+        container.appendChild(grid);
     });
 }
 
-function resetSelection() {
-    if (selectedIds.size === 0) return;
-    if (confirm("確定要清除所有已選圖片嗎？")) {
-        selectedIds.clear(); renderBank(); updateUI();
-    }
+function toggleCategory(catId) {
+    const items = vocabItems.filter(i => i.cat === catId);
+    const allSelected = items.every(i => selectedIds.has(i.id));
+    items.forEach(i => allSelected ? selectedIds.delete(i.id) : selectedIds.add(i.id));
+    renderBank();
+    updateUI();
 }
 
 function updateUI() {
     document.getElementById('selected-count').innerText = selectedIds.size;
     const startBtn = document.getElementById('start-btn');
     startBtn.disabled = selectedIds.size === 0;
-    startBtn.className = `nav-btn ${selectedIds.size === 0 ? 'disabled' : ''}`;
+}
+
+function resetSelection() {
+    if (confirm("確定要重設嗎？")) { selectedIds.clear(); renderBank(); updateUI(); }
+}
+
+function adjustZoom() {
+    document.documentElement.style.setProperty('--card-size', document.getElementById('zoom-slider').value + 'px');
+}
+
+function filterCategory() {
+    currentFilter = document.getElementById('category-filter').value;
+    renderBank();
 }
 
 function syncLabelWithCheck() {
-    const isChecked = document.getElementById('always-show-check').checked;
-    const container = document.getElementById('label-container');
-    container.className = isChecked ? "show-text" : "hide-text";
+    document.getElementById('label-container').className = document.getElementById('always-show-check').checked ? "show-text" : "hide-text";
+}
+
+function toggleFlip(el, hintType) {
+    el.classList.toggle('flipped');
+    if (el.classList.contains('flipped')) {
+        const item = gameQueue[currentIdx];
+        if (!gameRecords[item.id]) gameRecords[item.id] = { 類別:0, 特徵:0, 地點:0, 用途:0 };
+        gameRecords[item.id][hintType] = 1;
+    }
 }
 
 function startSelectedGame() {
     gameQueue = vocabItems.filter(item => selectedIds.has(item.id));
+    gameRecords = {}; // 重置紀錄
     if (document.getElementById('order-mode').value === 'random') {
-        for (let i = gameQueue.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [gameQueue[i], gameQueue[j]] = [gameQueue[j], gameQueue[i]];
-        }
+        gameQueue.sort(() => Math.random() - 0.5);
     }
     currentIdx = 0;
     document.getElementById('bank-screen').classList.add('hidden');
@@ -131,10 +141,7 @@ function loadStage() {
     document.getElementById('current-img').src = item.img;
     document.getElementById('current-label').innerText = item.name;
     document.getElementById('game-progress').innerText = `${currentIdx + 1} / ${gameQueue.length}`;
-    
-    // --- 核心修正：每關重置提示卡為隱藏狀態 ---
     document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
-    
     syncLabelWithCheck();
     document.getElementById('prev-btn').disabled = (currentIdx === 0);
     document.getElementById('next-btn').innerText = (currentIdx === gameQueue.length - 1) ? "完成 🏁" : "下一個 ➡️";
@@ -142,18 +149,37 @@ function loadStage() {
 
 function nextPhoto() {
     if (currentIdx < gameQueue.length - 1) { currentIdx++; loadStage(); }
-    else { exitGame(); }
+    else { showReport(); }
 }
 
 function prevPhoto() {
     if (currentIdx > 0) { currentIdx--; loadStage(); }
 }
 
+function showReport() {
+    const tbody = document.getElementById('report-body');
+    tbody.innerHTML = '';
+    gameQueue.forEach(item => {
+        const r = gameRecords[item.id] || { 類別:0, 特徵:0, 地點:0, 用途:0 };
+        tbody.innerHTML += `<tr>
+            <td><strong>${item.name}</strong></td>
+            <td>${r.類別 ? '<span class="used-mark">✔</span>' : '<span class="unused-mark">-</span>'}</td>
+            <td>${r.特徵 ? '<span class="used-mark">✔</span>' : '<span class="unused-mark">-</span>'}</td>
+            <td>${r.地點 ? '<span class="used-mark">✔</span>' : '<span class="unused-mark">-</span>'}</td>
+            <td>${r.用途 ? '<span class="used-mark">✔</span>' : '<span class="unused-mark">-</span>'}</td>
+        </tr>`;
+    });
+    document.getElementById('report-overlay').classList.remove('hidden');
+}
+
+function closeReport() {
+    document.getElementById('report-overlay').classList.add('hidden');
+    exitGame();
+}
+
 function exitGame() {
     document.getElementById('game-screen').classList.add('hidden');
     document.getElementById('bank-screen').classList.remove('hidden');
 }
-
-function toggleFlip(el) { el.classList.toggle('flipped'); }
 
 init();
