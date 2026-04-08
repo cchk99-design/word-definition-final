@@ -9,16 +9,12 @@
 <body>
     <div id="bank-screen">
         <h1 style="color: #5D4037; margin-top: 20px;">📺 超級無敵大電視</h1>
-        
         <div class="sticky-controls">
             <div class="filter-zoom-bar">
                 <div class="control-group">
                     <label>📂 分類：</label>
-                    <select id="category-filter" onchange="filterCategory()">
-                        <option value="all">顯示全部</option>
-                    </select>
+                    <select id="category-filter" onchange="filterCategory()"><option value="all">顯示全部</option></select>
                 </div>
-                
                 <div class="control-group">
                     <label>🔀 排序：</label>
                     <select id="order-mode">
@@ -26,13 +22,11 @@
                         <option value="random">隨機亂序</option>
                     </select>
                 </div>
-
                 <div class="control-group">
                     <label>🔍 縮放：</label>
                     <input type="range" id="zoom-slider" min="100" max="300" value="160" oninput="adjustZoom()">
                 </div>
             </div>
-
             <div id="selection-bar">
                 <span>已選項目：<strong id="selected-count">0</strong></span>
                 <button id="reset-btn" class="nav-btn reset-btn" onclick="resetSelection()">重設選擇 🔄</button>
@@ -47,57 +41,26 @@
             <button class="back-btn" onclick="exitGame()">⬅️ 返回重選</button>
             <div id="game-progress">1 / 1</div>
         </div>
-        
         <div class="game-container">
             <div class="display-box">
                 <img id="current-img" src="" alt="Main Image">
-                
                 <div id="label-container" class="hide-text">
                     <div id="current-label" class="object-name">名稱</div>
                 </div>
-                <button id="toggle-text-btn" class="toggle-btn" onclick="toggleLabel()">顯示名稱 👁️</button>
+                <div class="toggle-wrapper">
+                    <label class="switch-label">
+                        <input type="checkbox" id="always-show-check" onchange="syncLabelWithCheck()">
+                        <span class="checkbox-text">顯示名稱 👁️</span>
+                    </label>
+                </div>
             </div>
-
             <div class="hints-grid">
-                <div class="flip-card" onclick="toggleFlip(this)">
-                    <div class="flip-card-inner">
-                        <div class="card-front">？</div>
-                        <div class="card-back cat-bg">
-                            <img src="images/hints/hint-cat.png" class="hint-icon-img">
-                            <span>類別</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flip-card" onclick="toggleFlip(this)">
-                    <div class="flip-card-inner">
-                        <div class="card-front">？</div>
-                        <div class="card-back feat-bg">
-                            <img src="images/hints/hint-feat.png" class="hint-icon-img">
-                            <span>特徵</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flip-card" onclick="toggleFlip(this)">
-                    <div class="flip-card-inner">
-                        <div class="card-front">？</div>
-                        <div class="card-back loc-bg">
-                            <img src="images/hints/hint-loc.png" class="hint-icon-img">
-                            <span>地點</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flip-card" onclick="toggleFlip(this)">
-                    <div class="flip-card-inner">
-                        <div class="card-front">？</div>
-                        <div class="card-back func-bg">
-                            <img src="images/hints/hint-func.png" class="hint-icon-img">
-                            <span>用途</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="flip-card" onclick="toggleFlip(this)"><div class="flip-card-inner"><div class="card-front">？</div><div class="card-back cat-bg"><img src="images/hints/hint-cat.png" class="hint-icon-img"><span>類別</span></div></div></div>
+                <div class="flip-card" onclick="toggleFlip(this)"><div class="flip-card-inner"><div class="card-front">？</div><div class="card-back feat-bg"><img src="images/hints/hint-feat.png" class="hint-icon-img"><span>特徵</span></div></div></div>
+                <div class="flip-card" onclick="toggleFlip(this)"><div class="flip-card-inner"><div class="card-front">？</div><div class="card-back loc-bg"><img src="images/hints/hint-loc.png" class="hint-icon-img"><span>地點</span></div></div></div>
+                <div class="flip-card" onclick="toggleFlip(this)"><div class="flip-card-inner"><div class="card-front">？</div><div class="card-back func-bg"><img src="images/hints/hint-func.png" class="hint-icon-img"><span>用途</span></div></div></div>
             </div>
         </div>
-
         <div class="footer-nav">
             <button id="prev-btn" class="nav-btn secondary-btn" onclick="prevPhoto()">⬅️ 上一個</button>
             <button id="next-btn" class="nav-btn" onclick="nextPhoto()">下一個 ➡️</button>
