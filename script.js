@@ -58,11 +58,9 @@ function renderBank() {
         if (currentFilter !== "all" && currentFilter !== cat.id) return;
         const items = vocabItems.filter(i => i.cat === cat.id);
         if (items.length === 0) return;
-
         const header = document.createElement('div');
         header.className = 'category-header';
         header.innerHTML = `<h3>${cat.name}</h3><button class="select-all-btn" onclick="toggleCategory('${cat.id}')">全選 / 取消</button>`;
-        
         const grid = document.createElement('div');
         grid.className = 'grid';
         items.forEach(item => {
@@ -71,14 +69,18 @@ function renderBank() {
             card.innerHTML = `<img src="${item.img}" onerror="this.src='https://via.placeholder.com/150'"><div class="label-text">${item.name}</div>`;
             card.onclick = () => {
                 selectedIds.has(item.id) ? selectedIds.delete(item.id) : selectedIds.add(item.id);
-                card.classList.toggle('selected');
-                updateUI();
+                card.classList.toggle('selected'); updateUI();
             };
             grid.appendChild(card);
         });
-        container.appendChild(header);
-        container.appendChild(grid);
+        container.appendChild(header); container.appendChild(grid);
     });
+}
+
+function updateUI() {
+    document.getElementById('selected-count').innerText = selectedIds.size;
+    const startBtn = document.getElementById('start-btn');
+    startBtn.disabled = selectedIds.size === 0;
 }
 
 function toggleCategory(catId) {
@@ -88,23 +90,15 @@ function toggleCategory(catId) {
     renderBank(); updateUI();
 }
 
-function updateUI() {
-    document.getElementById('selected-count').innerText = selectedIds.size;
-    document.getElementById('start-btn').disabled = selectedIds.size === 0;
-    document.getElementById('start-btn').classList.toggle('disabled', selectedIds.size === 0);
-}
-
-function resetSelection() { if (confirm("確定重設？")) { selectedIds.clear(); renderBank(); updateUI(); } }
-function adjustZoom() { document.documentElement.style.setProperty('--card-size', document.getElementById('zoom-slider').value + 'px'); }
-function filterCategory() { currentFilter = document.getElementById('category-filter').value; renderBank(); }
-function syncLabelWithCheck() { document.getElementById('label-container').className = document.getElementById('always-show-check').checked ? "show-text" : "hide-text"; }
-
-function toggleFlip(el, hintType) {
-    el.classList.toggle('flipped');
-    if (el.classList.contains('flipped')) {
-        const item = gameQueue[currentIdx];
-        if (!gameRecords[item.id]) gameRecords[item.id] = { 類別:0, 特徵:0, 地點:0, 用途:0 };
-        gameRecords[item.id][hintType] = 1;
+function syncLabelWithCheck() {
+    const isChecked = document.getElementById('always-show-check').checked;
+    const container = document.getElementById('label-container');
+    if (isChecked) {
+        container.classList.remove('hide-text');
+        container.classList.add('show-text');
+    } else {
+        container.classList.remove('show-text');
+        container.classList.add('hide-text');
     }
 }
 
@@ -124,9 +118,21 @@ function loadStage() {
     document.getElementById('current-label').innerText = item.name;
     document.getElementById('game-progress').innerText = `${currentIdx + 1} / ${gameQueue.length}`;
     document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+    
+    // 每次換圖都根據勾選框狀態同步顯示
     syncLabelWithCheck();
+
     document.getElementById('prev-btn').disabled = (currentIdx === 0);
     document.getElementById('next-btn').innerText = (currentIdx === gameQueue.length - 1) ? "完成 🏁" : "下一個 ➡️";
+}
+
+function toggleFlip(el, hintType) {
+    el.classList.toggle('flipped');
+    if (el.classList.contains('flipped')) {
+        const item = gameQueue[currentIdx];
+        if (!gameRecords[item.id]) gameRecords[item.id] = { 類別:0, 特徵:0, 地點:0, 用途:0 };
+        gameRecords[item.id][hintType] = 1;
+    }
 }
 
 function nextPhoto() {
@@ -157,34 +163,28 @@ async function exportReportAsImage() {
     const table = document.getElementById('report-table');
     const cw = 120, ch = 50;
     const rows = table.rows.length, cols = table.rows[0].cells.length;
-    
-    canvas.width = cw * cols + 40; 
-    canvas.height = ch * rows + 180; // 增加底部高度給註解
-
+    canvas.width = cw * cols + 40; canvas.height = ch * rows + 180;
     ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#5D4037"; ctx.font = "bold 26px Microsoft JhengHei"; ctx.fillText("超級無敵大電視 - 練習紀錄", 20, 45);
     ctx.font = "bold 20px Microsoft JhengHei"; ctx.fillStyle = "#0288D1"; ctx.fillText(`學生姓名：${name}`, 20, 85);
-    ctx.font = "14px Microsoft JhengHei"; ctx.fillStyle = "#999"; ctx.fillText(`日期：${new Date().toLocaleString()}`, 380, 85);
-
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
             const x = 20 + c * cw, y = 110 + r * ch;
             ctx.strokeStyle = "#CCC"; ctx.strokeRect(x, y, cw, ch);
             const text = table.rows[r].cells[c].innerText;
             ctx.fillStyle = (text === "✔") ? "#E53935" : "#333";
-            ctx.font = (r === 0 || c === 0) ? "bold 18px Microsoft JhengHei" : "18px Microsoft JhengHei";
             ctx.fillText(text, x + (cw - ctx.measureText(text).width)/2, y + 32);
         }
     }
-    // 加入圖片底部說明
     ctx.fillStyle = "#666"; ctx.font = "italic 16px Microsoft JhengHei";
     ctx.fillText("註：勾號 (✔) 代表該題目曾翻開對應的提示卡。", 20, 110 + rows * ch + 40);
-
     const link = document.createElement('a');
-    link.download = `紀錄_${name}_${new Date().getTime()}.png`;
-    link.href = canvas.toDataURL(); link.click();
+    link.download = `紀錄_${name}.png`; link.href = canvas.toDataURL(); link.click();
 }
 
+function resetSelection() { if (confirm("確定重設？")) { selectedIds.clear(); renderBank(); updateUI(); } }
+function adjustZoom() { document.documentElement.style.setProperty('--card-size', document.getElementById('zoom-slider').value + 'px'); }
+function filterCategory() { currentFilter = document.getElementById('category-filter').value; renderBank(); }
 function closeReport() { document.getElementById('report-overlay').classList.add('hidden'); exitGame(); }
 function exitGame() { document.getElementById('game-screen').classList.add('hidden'); document.getElementById('bank-screen').classList.remove('hidden'); }
 
