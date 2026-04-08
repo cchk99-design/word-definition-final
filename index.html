@@ -2,13 +2,13 @@
 <html lang="zh-Hant-HK">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>超級無敵大電視 - Final Version</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>超級無敵大電視 Master Final</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="bank-screen">
-        <h1 style="color: #5D4037;">🏫 超級無敵大電視</h1>
+        <h1 style="color: #5D4037; margin-top: 20px;">🌟 超級無敵大電視：全系列教材</h1>
         <div class="sticky-controls">
             <div id="selection-bar">
                 <span>已選：<strong id="selected-count">0</strong> 項目</span>
@@ -20,37 +20,51 @@
 
     <div id="game-screen" class="hidden">
         <div class="header-nav">
-            <button class="back-btn" onclick="exitGame()">⬅️ 返回</button>
+            <button class="back-btn" onclick="exitGame()">⬅️ 返回重選</button>
             <div id="game-progress">1 / 1</div>
         </div>
+        
         <div class="game-container">
             <div class="display-box">
-                <img id="current-img" src="">
-                <div id="current-label" class="object-name">名稱顯示</div>
+                <img id="current-img" src="" alt="Main Image">
+                <div id="current-label" class="object-name">名稱</div>
             </div>
+
             <div class="hints-grid">
                 <div class="flip-card" onclick="toggleFlip(this)">
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
-                        <div class="card-back cat-bg"><img src="images/hints/hint-cat.png" class="hint-icon-img"><span>類別</span></div>
+                        <div class="card-back cat-bg">
+                            <img src="images/hints/hint-cat.png" class="hint-icon-img" data-type="hint">
+                            <span>類別</span>
+                        </div>
                     </div>
                 </div>
                 <div class="flip-card" onclick="toggleFlip(this)">
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
-                        <div class="card-back feat-bg"><img src="images/hints/hint-feat.png" class="hint-icon-img"><span>特徵</span></div>
+                        <div class="card-back feat-bg">
+                            <img src="images/hints/hint-feat.png" class="hint-icon-img" data-type="hint">
+                            <span>特徵</span>
+                        </div>
                     </div>
                 </div>
                 <div class="flip-card" onclick="toggleFlip(this)">
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
-                        <div class="card-back loc-bg"><img src="images/hints/hint-loc.png" class="hint-icon-img"><span>地點</span></div>
+                        <div class="card-back loc-bg">
+                            <img src="images/hints/hint-loc.png" class="hint-icon-img" data-type="hint">
+                            <span>地點</span>
+                        </div>
                     </div>
                 </div>
                 <div class="flip-card" onclick="toggleFlip(this)">
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
-                        <div class="card-back func-bg"><img src="images/hints/hint-func.png" class="hint-icon-img"><span>用途</span></div>
+                        <div class="card-back func-bg">
+                            <img src="images/hints/hint-func.png" class="hint-icon-img" data-type="hint">
+                            <span>用途</span>
+                        </div>
                     </div>
                 </div>
             </div>
