@@ -5,11 +5,10 @@ const categories = [
     { id: "tableware", name: "🍽️ 餐具" }, { id: "drinks", name: "🍹 飲品" },
     { id: "toys", name: "🧸 玩具" }, { id: "electronic", name: "💻 電器" },
     { id: "furniture", name: "🛋️ 家具" }, { id: "stationery", name: "✏️ 文具" },
-    { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通" },
+    { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通工具" },
     { id: "places", name: "🏢 地點" }, { id: "accessories", name: "🕶️ 配飾" }
 ];
 
-// 請在此填寫各類別圖片對應名稱 (與檔案 fruits (1).png 順序一致)
 const vocabData = {
     fruits: ["龍眼", "哈密瓜", "士多啤梨","奇異果","提子","木瓜","楊桃","榴槤","橙","檸檬","火龍果","牛油果","芒果","荔枝","菠蘿","藍莓","蘋果","西瓜","車厘子","香蕉"], 
     veggies: ["黃椒", "南瓜","娃娃菜","椰菜","椰菜花","洋蔥","生菜","番薯","白菜","粟米","紅椒","紅蘿蔔","矮瓜/茄子","菜心","菠菜","番茄","薯仔","蘑菇","白蘿蔔","西蘭花","辣椒","青椒","青瓜","青豆"],
@@ -29,22 +28,22 @@ const vocabData = {
     accessories: ["眼鏡", "頸鍊","手鍊","耳環","戒指","手錶","髮夾","銀包","書包","手袋","遮"]
 };
 
-const vocabItems = [];
-let globalId = 1;
-let currentFilter = "all";
+let vocabItems = [];
 let selectedIds = new Set();
 let gameQueue = [];
 let currentIdx = 0;
+let currentFilter = "all";
 
-// 初始化數據與分類選單
+// 初始化
 function init() {
+    let globalId = 1;
     Object.keys(vocabData).forEach(catId => {
         vocabData[catId].forEach((name, index) => {
             vocabItems.push({
                 id: globalId++,
                 cat: catId,
                 name: name,
-                img: `images/vocab/${catId} (${index + 1}).png` // Windows 格式
+                img: `images/vocab/${catId} (${index + 1}).png`
             });
         });
     });
@@ -56,11 +55,9 @@ function init() {
         opt.textContent = cat.name;
         filterSelect.appendChild(opt);
     });
-
     renderBank();
 }
 
-// 縮放與過濾
 function adjustZoom() {
     const val = document.getElementById('zoom-slider').value;
     document.documentElement.style.setProperty('--card-size', val + 'px');
@@ -74,17 +71,15 @@ function filterCategory() {
 function renderBank() {
     const container = document.getElementById('bank-content');
     container.innerHTML = '';
-    
     categories.forEach(cat => {
         if (currentFilter !== "all" && currentFilter !== cat.id) return;
         const items = vocabItems.filter(i => i.cat === cat.id);
         if (items.length === 0) return;
 
         const section = document.createElement('div');
-        section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:6px solid #FFCC00; padding-left:12px; color:#5D4037;">${cat.name}</h3>`;
+        section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:5px solid #FFCC00; padding-left:10px;">${cat.name}</h3>`;
         const grid = document.createElement('div');
         grid.className = 'grid';
-        
         items.forEach(item => {
             const card = document.createElement('div');
             card.className = `vocab-card ${selectedIds.has(item.id) ? 'selected' : ''}`;
@@ -108,18 +103,14 @@ function updateUI() {
     btn.className = `nav-btn ${selectedIds.size === 0 ? 'disabled' : ''}`;
 }
 
-// 遊戲邏輯與隨機排序
 function startSelectedGame() {
     gameQueue = vocabItems.filter(item => selectedIds.has(item.id));
-    
-    const mode = document.getElementById('order-mode').value;
-    if (mode === 'random') {
+    if (document.getElementById('order-mode').value === 'random') {
         for (let i = gameQueue.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [gameQueue[i], gameQueue[j]] = [gameQueue[j], gameQueue[i]];
         }
     }
-
     currentIdx = 0;
     document.getElementById('bank-screen').classList.add('hidden');
     document.getElementById('game-screen').classList.remove('hidden');
@@ -131,21 +122,30 @@ function loadStage() {
     document.getElementById('current-img').src = item.img;
     document.getElementById('current-label').innerText = item.name;
     document.getElementById('game-progress').innerText = `${currentIdx + 1} / ${gameQueue.length}`;
+    
     document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+    
+    // 按鈕狀態控制
+    document.getElementById('prev-btn').disabled = (currentIdx === 0);
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.innerText = (currentIdx === gameQueue.length - 1) ? "完成 🏁" : "下一個 ➡️";
 }
 
 function nextPhoto() {
     if (currentIdx < gameQueue.length - 1) {
         currentIdx++; loadStage();
-    } else {
-        alert("練習完成！"); exitGame();
+    } else { alert("練習完成！"); exitGame(); }
+}
+
+function prevPhoto() {
+    if (currentIdx > 0) {
+        currentIdx--; loadStage();
     }
 }
 
 function exitGame() {
     document.getElementById('game-screen').classList.add('hidden');
     document.getElementById('bank-screen').classList.remove('hidden');
-    window.scrollTo(0,0);
 }
 
 function toggleFlip(el) { el.classList.toggle('flipped'); }
