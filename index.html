@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>超級無敵大電視 - 專業版</title>
+    <title>超級無敵大電視</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,8 +18,8 @@
                 <div class="control-group">
                     <label>🔀 排序：</label>
                     <select id="order-mode">
-                        <option value="sequence">依類別顯示</option>
-                        <option value="random">隨機顯示</option>
+                        <option value="sequence">依序</option>
+                        <option value="random">隨機</option>
                     </select>
                 </div>
                 <div class="control-group">
@@ -31,7 +31,7 @@
                 <div class="status-info">已選項目：<strong id="selected-count">0</strong></div>
                 <div class="button-group">
                     <button id="reset-btn" class="nav-btn reset-btn" onclick="resetSelection()">重設選擇 🔄</button>
-                    <button id="start-btn" class="nav-btn start-btn disabled" onclick="startSelectedGame()" disabled>開始練習 ▶️</button>
+                    <button id="start-btn" class="nav-btn start-btn disabled" onclick="startSelectedGame()" disabled>開始挑戰 ▶️</button>
                 </div>
             </div>
         </div>
@@ -79,4 +79,52 @@
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back loc-bg">
-                            <img src="images/hints/hint
+                            <img src="images/hints/hint-loc.png" class="hint-icon-img">
+                            <span>地點</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card" onclick="toggleFlip(this, '用途')">
+                    <div class="flip-card-inner">
+                        <div class="card-front">？</div>
+                        <div class="card-back func-bg">
+                            <img src="images/hints/hint-func.png" class="hint-icon-img">
+                            <span>用途</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-nav">
+            <button id="prev-btn" class="nav-btn secondary-btn" onclick="prevPhoto()">⬅️ 上一個</button>
+            <button id="next-btn" class="nav-btn" onclick="nextPhoto()">下一個 ➡️</button>
+        </div>
+    </div>
+
+    <div id="report-overlay" class="hidden">
+        <div class="report-card">
+            <h2>📊 練習紀錄表</h2>
+            <div class="report-header-input">
+                <label>學生姓名：</label>
+                <input type="text" id="student-name" placeholder="請輸入姓名">
+            </div>
+            <div class="report-scroll">
+                <table id="report-table">
+                    <thead>
+                        <tr><th>項目</th><th>類別</th><th>特徵</th><th>地點</th><th>用途</th></tr>
+                    </thead>
+                    <tbody id="report-body"></tbody>
+                </table>
+            </div>
+            <p class="report-note">💡 註：勾號 (✔) 代表該題目曾翻開對應的提示卡。</p>
+            <div class="report-footer">
+                <button class="nav-btn save-img-btn" onclick="exportReportAsImage()">儲存為圖片 📸</button>
+                <button class="nav-btn" onclick="closeReport()">返回主頁</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="export-canvas" style="display:none;"></canvas>
+    <script src="script.js"></script>
+</body>
+</html>
