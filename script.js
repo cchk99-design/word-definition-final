@@ -91,24 +91,13 @@ function toggleCategory(catId) {
 function updateUI() {
     document.getElementById('selected-count').innerText = selectedIds.size;
     document.getElementById('start-btn').disabled = selectedIds.size === 0;
+    document.getElementById('start-btn').classList.toggle('disabled', selectedIds.size === 0);
 }
 
-function resetSelection() {
-    if (confirm("重設所有選擇？")) { selectedIds.clear(); renderBank(); updateUI(); }
-}
-
-function adjustZoom() {
-    document.documentElement.style.setProperty('--card-size', document.getElementById('zoom-slider').value + 'px');
-}
-
-function filterCategory() {
-    currentFilter = document.getElementById('category-filter').value;
-    renderBank();
-}
-
-function syncLabelWithCheck() {
-    document.getElementById('label-container').className = document.getElementById('always-show-check').checked ? "show-text" : "hide-text";
-}
+function resetSelection() { if (confirm("確定重設？")) { selectedIds.clear(); renderBank(); updateUI(); } }
+function adjustZoom() { document.documentElement.style.setProperty('--card-size', document.getElementById('zoom-slider').value + 'px'); }
+function filterCategory() { currentFilter = document.getElementById('category-filter').value; renderBank(); }
+function syncLabelWithCheck() { document.getElementById('label-container').className = document.getElementById('always-show-check').checked ? "show-text" : "hide-text"; }
 
 function toggleFlip(el, hintType) {
     el.classList.toggle('flipped');
@@ -166,10 +155,11 @@ async function exportReportAsImage() {
     const ctx = canvas.getContext('2d');
     const name = document.getElementById('student-name').value || "未填寫";
     const table = document.getElementById('report-table');
-    
-    const rows = table.rows.length, cols = table.rows[0].cells.length;
     const cw = 120, ch = 50;
-    canvas.width = cw * cols + 40; canvas.height = ch * rows + 140;
+    const rows = table.rows.length, cols = table.rows[0].cells.length;
+    
+    canvas.width = cw * cols + 40; 
+    canvas.height = ch * rows + 180; // 增加底部高度給註解
 
     ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#5D4037"; ctx.font = "bold 26px Microsoft JhengHei"; ctx.fillText("超級無敵大電視 - 練習紀錄", 20, 45);
@@ -186,6 +176,10 @@ async function exportReportAsImage() {
             ctx.fillText(text, x + (cw - ctx.measureText(text).width)/2, y + 32);
         }
     }
+    // 加入圖片底部說明
+    ctx.fillStyle = "#666"; ctx.font = "italic 16px Microsoft JhengHei";
+    ctx.fillText("註：勾號 (✔) 代表該題目曾翻開對應的提示卡。", 20, 110 + rows * ch + 40);
+
     const link = document.createElement('a');
     link.download = `紀錄_${name}_${new Date().getTime()}.png`;
     link.href = canvas.toDataURL(); link.click();
