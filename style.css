@@ -1,48 +1,49 @@
+:root { --card-size: 160px; }
 body { font-family: "Microsoft JhengHei", sans-serif; background: #FFFDF0; margin: 0; padding: 10px; text-align: center; }
 .hidden { display: none; }
 
-/* 頂部控制列優化 */
+/* 頂部控制面板 */
 .sticky-controls { 
     position: sticky; top: 10px; background: white; padding: 15px; 
     border-radius: 20px; border: 3px solid #FFCC00; 
-    margin-bottom: 20px; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    margin: 0 auto 20px; max-width: 95%; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
 }
-
 .filter-zoom-bar { 
     display: flex; justify-content: space-around; align-items: center; 
     flex-wrap: wrap; gap: 15px; margin-bottom: 15px; border-bottom: 1px dashed #DDD; padding-bottom: 15px;
 }
-
 .control-group { display: flex; align-items: center; gap: 10px; font-weight: bold; }
+select { padding: 8px 12px; border-radius: 10px; border: 2px solid #FFCC00; font-size: 1rem; background: white; }
 
-select { padding: 8px; border-radius: 10px; border: 2px solid #FFCC00; font-size: 1rem; }
-
-/* 網格大小由 JS 控制變數 */
-.grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(var(--card-size, 160px), 1fr)); 
-    gap: 15px; padding: 15px; 
-}
-
-.vocab-card { background: white; border: 3px solid #FFCC00; border-radius: 15px; padding: 10px; cursor: pointer; }
-.vocab-card.selected { border-color: #03A9F4; background: #E1F5FE; }
+/* 選圖網格 */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr)); gap: 15px; padding: 15px; }
+.vocab-card { background: white; border: 3px solid #FFCC00; border-radius: 15px; padding: 10px; cursor: pointer; transition: 0.2s; }
+.vocab-card.selected { border-color: #03A9F4; background: #E1F5FE; transform: scale(1.03); }
 .vocab-card img { width: 100%; aspect-ratio: 1/1; object-fit: contain; }
+.label-text { margin-top: 5px; font-weight: bold; color: #555; }
 
-/* iPad 左右佈局與縮放提示保持不變 */
-.game-container { display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 40px; max-width: 1100px; margin: 20px auto; }
-.display-box { flex: 1.2; background: white; border-radius: 30px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-.display-box img { width: 100%; max-width: 450px; object-fit: contain; }
-.object-name { font-size: 3rem; font-weight: bold; margin-top: 15px; border-top: 2px solid #EEE; padding-top: 10px; }
+/* iPad 左右並排佈局 */
+.game-container { display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 40px; max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+.display-box { flex: 1.3; background: white; border-radius: 30px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.display-box img { width: 100%; max-width: 480px; aspect-ratio: 1/1; object-fit: contain; }
+.object-name { font-size: 3.5rem; font-weight: bold; color: #333; margin-top: 15px; border-top: 2px solid #EEE; padding-top: 10px; }
+
+/* 提示卡放大版 */
 .hints-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.flip-card { width: 180px; height: 180px; perspective: 1000px; }
+.flip-card { width: 200px; height: 200px; perspective: 1000px; }
 .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
 .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
 .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.card-front { background: #EEE; font-size: 3rem; color: #BBB; }
+.card-front { background: #EEE; font-size: 4rem; color: #CCC; }
 .card-back { transform: rotateY(180deg); color: white; }
 .hint-icon-img { width: 85%; height: 85%; object-fit: contain; }
+.card-back span { font-size: 1.5rem; font-weight: bold; margin-top: 5px; }
+
+/* 顏色與按鈕 */
 .cat-bg { background: #03A9F4; } .feat-bg { background: #4CAF50; } 
 .loc-bg { background: #FF9800; } .func-bg { background: #9C27B0; }
-.nav-btn { padding: 12px 40px; background: #FF9800; color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.5rem; cursor: pointer; }
-.nav-btn.disabled { background: #CCC; }
-.back-btn { padding: 10px 20px; background: #5D4037; color: white; border-radius: 50px; border: none; cursor: pointer; }
+.nav-btn { padding: 15px 45px; background: #FF9800; color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.6rem; cursor: pointer; }
+.nav-btn.disabled { background: #CCC; cursor: not-allowed; }
+.back-btn { padding: 10px 25px; background: #5D4037; color: white; border-radius: 50px; border: none; font-size: 1.1rem; cursor: pointer; }
+
+@media (max-width: 900px) { .game-container { flex-direction: column; } }
