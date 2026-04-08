@@ -30,7 +30,7 @@
             <div id="selection-bar">
                 <span>已選項目：<strong id="selected-count">0</strong></span>
                 <button id="reset-btn" class="nav-btn reset-btn" onclick="resetSelection()">重設選擇 🔄</button>
-                <button id="start-btn" class="nav-btn disabled" onclick="startSelectedGame()" disabled>開始練習 ▶️</button>
+                <button id="start-btn" class="nav-btn disabled" onclick="startSelectedGame()" disabled>開始挑戰 ▶️</button>
             </div>
         </div>
         <div id="bank-content"></div>
@@ -102,6 +102,10 @@
     <div id="report-overlay" class="hidden">
         <div class="report-card">
             <h2>📊 練習紀錄表</h2>
+            <div class="report-header-input">
+                <label>學生姓名：</label>
+                <input type="text" id="student-name" placeholder="請輸入姓名">
+            </div>
             <div class="report-scroll">
                 <table id="report-table">
                     <thead>
@@ -110,9 +114,14 @@
                     <tbody id="report-body"></tbody>
                 </table>
             </div>
-            <button class="nav-btn" onclick="closeReport()">返回主頁</button>
+            <div class="report-footer">
+                <button class="nav-btn save-img-btn" onclick="exportReportAsImage()">儲存為圖片 📸</button>
+                <button class="nav-btn" onclick="closeReport()">返回主頁</button>
+            </div>
         </div>
     </div>
+
+    <canvas id="export-canvas" style="display:none;"></canvas>
 
     <script src="script.js"></script>
 </body>
