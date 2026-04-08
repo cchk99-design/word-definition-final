@@ -1,8 +1,8 @@
 :root { --card-size: 160px; }
-body { font-family: "Microsoft JhengHei", "Apple LiGothic Medium", sans-serif; background: #FFFDF0; margin: 0; padding: 10px; text-align: center; }
+body { font-family: "Microsoft JhengHei", sans-serif; background: #FFFDF0; margin: 0; padding: 10px; text-align: center; }
 .hidden { display: none; }
 
-/* 頂部控制面板 */
+/* 控制面板 */
 .sticky-controls { 
     position: sticky; top: 10px; background: white; padding: 15px; border-radius: 20px; 
     border: 3px solid #FFCC00; margin: 0 auto 20px; max-width: 95%; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
@@ -11,7 +11,7 @@ body { font-family: "Microsoft JhengHei", "Apple LiGothic Medium", sans-serif; b
 .control-group { display: flex; align-items: center; gap: 8px; font-weight: bold; }
 select { padding: 8px; border-radius: 10px; border: 2px solid #FFCC00; background: white; }
 
-/* 網格與卡片 */
+/* 網格 */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr)); gap: 15px; padding: 15px; }
 .vocab-card { background: white; border: 3px solid #FFCC00; border-radius: 15px; padding: 10px; cursor: pointer; }
 .vocab-card.selected { border-color: #03A9F4; background: #E1F5FE; }
@@ -22,9 +22,9 @@ select { padding: 8px; border-radius: 10px; border: 2px solid #FFCC00; backgroun
 .display-box { flex: 1.3; background: white; border-radius: 30px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 .display-box img { width: 100%; max-width: 480px; aspect-ratio: 1/1; object-fit: contain; }
 
-/* 文字顯示控制 */
+/* 文字隱藏邏輯 */
 #label-container { width: 100%; transition: 0.3s; margin-top: 15px; border-top: 2px solid #EEE; padding-top: 10px; min-height: 80px; }
-.object-name { font-size: 3.5rem; font-weight: bold; color: #333; }
+.object-name { font-size: 3.5rem; font-weight: 900; color: #333; }
 #label-container.hide-text .object-name { opacity: 0; filter: blur(15px); }
 #label-container.show-text .object-name { opacity: 1; filter: blur(0); }
 
@@ -32,39 +32,30 @@ select { padding: 8px; border-radius: 10px; border: 2px solid #FFCC00; backgroun
 .switch-label { font-size: 1.3rem; font-weight: bold; color: #0288D1; cursor: pointer; display: flex; align-items: center; gap: 12px; }
 #always-show-check { width: 25px; height: 25px; cursor: pointer; }
 
-/* --- 提示卡核心修改 --- */
+/* 提示卡樣式 (低飽和度背景 + 粗體文字) */
 .hints-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .flip-card { width: 200px; height: 200px; perspective: 1000px; cursor: pointer; }
 .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
 .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
 .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-/* 卡片正面：保持簡潔灰色 */
-.card-front { background: #F5F5F5; font-size: 4rem; color: #CCC; border: 2px dashed #E0E0E0; }
-
-/* 提示圖片大小保持 85% */
+.card-front { background: #F5F5F5; font-size: 4rem; color: #CCC; border: 2px dashed #DDD; }
+.card-back { transform: rotateY(180deg); }
+.card-back span { font-size: 1.5rem; font-weight: 900 !important; color: #333; }
 .hint-icon-img { width: 85%; height: 85%; object-fit: contain; margin-bottom: 5px; }
 
-/* --- 修改：翻牌背面文字全部加粗 --- */
-.card-back span { 
-    font-size: 1.5rem; 
-    font-weight: 900 !important; /* 超粗體，提升清晰度 */
-    color: #333; /* 使用深灰色文字，搭配粉彩背景更協調 */
-}
+/* 粉彩背景 */
+.cat-bg  { background: #B3E5FC; } /* 類別 - 粉藍 */
+.feat-bg { background: #C8E6C9; } /* 特徵 - 粉綠 */
+.loc-bg  { background: #FFE082; } /* 地點 - 粉黃 */
+.func-bg { background: #E1BEE7; } /* 用途 - 粉紫 */
 
-/* --- 修改：低飽和度（粉彩）背景顏色 --- */
-.cat-bg  { background: #B3E5FC; } /* 粉藍 (類別) */
-.feat-bg { background: #C8E6C9; } /* 粉綠 (特徵) */
-.loc-bg  { background: #FFE082; } /* 粉黃 (地點) */
-.func-bg { background: #E1BEE7; } /* 粉紫 (用途) */
-
-/* 按鈕與導覽 */
+/* 按鈕 */
 .footer-nav { display: flex; justify-content: center; gap: 30px; padding: 20px; }
 .nav-btn { padding: 15px 45px; background: #FF9800; color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 0 #E65100; }
-.nav-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #E65100; }
-.secondary-btn { background: #A1887F !important; box-shadow: 0 4px 0 #5D4037 !important; } 
-.reset-btn { background: #EF9A9A !important; box-shadow: 0 4px 0 #C62828 !important; font-size: 1.1rem !important; padding: 10px 20px !important; margin-right: 15px;}
-.nav-btn:disabled { background: #E0E0E0 !important; color: #9E9E9E !important; box-shadow: none !important; cursor: not-allowed; opacity: 1; transform: none !important;}
-.back-btn { padding: 10px 20px; background: #795548; color: white; border-radius: 50px; border: none; cursor: pointer; }
+.secondary-btn { background: #A1887F !important; box-shadow: 0 4px 0 #5D4037 !important; }
+.reset-btn { background: #EF9A9A !important; box-shadow: 0 4px 0 #C62828 !important; font-size: 1.1rem !important; padding: 10px 20px !important; }
+.nav-btn:disabled { background: #E0E0E0 !important; color: #9E9E9E !important; box-shadow: none !important; cursor: not-allowed; transform: none !important; }
+.back-btn { padding: 10px 20px; background: #795548; color: white; border-radius: 50px; border: none; }
 
 @media (max-width: 900px) { .game-container { flex-direction: column; } .flip-card { width: 160px; height: 160px; } }
