@@ -33,7 +33,6 @@ let selectedIds = new Set();
 let gameQueue = [];
 let currentIdx = 0;
 let currentFilter = "all";
-let isLabelVisible = false;
 
 function init() {
     let globalId = 1;
@@ -112,17 +111,11 @@ function updateUI() {
     startBtn.className = `nav-btn ${selectedIds.size === 0 ? 'disabled' : ''}`;
 }
 
-function toggleLabel() {
+// 核心功能：同步勾選框與文字顯示狀態
+function syncLabelWithCheck() {
+    const isChecked = document.getElementById('always-show-check').checked;
     const container = document.getElementById('label-container');
-    const btn = document.getElementById('toggle-text-btn');
-    isLabelVisible = !isLabelVisible;
-    if (isLabelVisible) {
-        container.className = "show-text";
-        btn.innerText = "隱藏名稱 🙈";
-    } else {
-        container.className = "hide-text";
-        btn.innerText = "顯示名稱 👁️";
-    }
+    container.className = isChecked ? "show-text" : "hide-text";
 }
 
 function startSelectedGame() {
@@ -145,11 +138,11 @@ function loadStage() {
     document.getElementById('current-label').innerText = item.name;
     document.getElementById('game-progress').innerText = `${currentIdx + 1} / ${gameQueue.length}`;
     
-    // 重置狀態
+    // 重置翻牌
     document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
-    isLabelVisible = false;
-    document.getElementById('label-container').className = "hide-text";
-    document.getElementById('toggle-text-btn').innerText = "顯示名稱 👁️";
+    
+    // 每一關加載時檢查勾選框，決定文字是否直接顯示
+    syncLabelWithCheck();
     
     document.getElementById('prev-btn').disabled = (currentIdx === 0);
     document.getElementById('next-btn').innerText = (currentIdx === gameQueue.length - 1) ? "完成 🏁" : "下一個 ➡️";
