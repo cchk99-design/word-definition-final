@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>超級無敵大電視 Master Final - Pro 版</title>
+    <title>超級無敵大電視 Pro - Final Version</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="bank-screen">
-        <h1 style="color: #5D4037; margin-top: 20px;">🌟 超級無敵大電視</h1>
+        <h1 style="color: #5D4037; margin-top: 20px;">超級無敵大電視</h1>
         
         <div class="sticky-controls">
             <div class="filter-zoom-bar">
                 <div class="control-group">
                     <label>📂 分類：</label>
                     <select id="category-filter" onchange="filterCategory()">
-                        <option value="all">顯示全部</option>
-                        </select>
+                        <option value="all">全部類別</option>
+                    </select>
                 </div>
                 
+                <div class="control-group">
+                    <label>🔀 排序：</label>
+                    <select id="order-mode">
+                        <option value="sequence">依類別順序</option>
+                        <option value="random">隨機亂序</option>
+                    </select>
+                </div>
+
                 <div class="control-group">
                     <label>🔍 縮放：</label>
                     <input type="range" id="zoom-slider" min="100" max="300" value="160" oninput="adjustZoom()">
@@ -35,13 +43,13 @@
 
     <div id="game-screen" class="hidden">
         <div class="header-nav">
-            <button class="back-btn" onclick="exitGame()">⬅️ 返回重選</button>
+            <button class="back-btn" onclick="exitGame()">⬅️ 返回</button>
             <div id="game-progress">1 / 1</div>
         </div>
         
         <div class="game-container">
             <div class="display-box">
-                <img id="current-img" src="" alt="Main Image">
+                <img id="current-img" src="" alt="教學圖片">
                 <div id="current-label" class="object-name">名稱</div>
             </div>
 
