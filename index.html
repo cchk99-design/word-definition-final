@@ -18,8 +18,8 @@
                 <div class="control-group">
                     <label>🔀 排序：</label>
                     <select id="order-mode">
-                        <option value="sequence">依類別順序</option>
-                        <option value="random">隨機顯示</option>
+                        <option value="sequence">依序</option>
+                        <option value="random">隨機</option>
                     </select>
                 </div>
                 <div class="control-group">
@@ -27,10 +27,12 @@
                     <input type="range" id="zoom-slider" min="100" max="300" value="160" oninput="adjustZoom()">
                 </div>
             </div>
-            <div id="selection-bar">
-                <span>已選項目：<strong id="selected-count">0</strong></span>
-                <button id="reset-btn" class="nav-btn reset-btn" onclick="resetSelection()">重設選擇 🔄</button>
-                <button id="start-btn" class="nav-btn disabled" onclick="startSelectedGame()" disabled>開始挑戰 ▶️</button>
+            <div id="selection-bar" class="horizontal-actions">
+                <div class="status-info">已選項目：<strong id="selected-count">0</strong></div>
+                <div class="button-group">
+                    <button id="reset-btn" class="nav-btn reset-btn" onclick="resetSelection()">重設選擇 🔄</button>
+                    <button id="start-btn" class="nav-btn start-btn disabled" onclick="startSelectedGame()" disabled>開始挑戰 ▶️</button>
+                </div>
             </div>
         </div>
         <div id="bank-content"></div>
@@ -114,6 +116,7 @@
                     <tbody id="report-body"></tbody>
                 </table>
             </div>
+            <p class="report-note">💡 註：勾號 (✔) 代表該題目曾翻開對應的提示卡。</p>
             <div class="report-footer">
                 <button class="nav-btn save-img-btn" onclick="exportReportAsImage()">儲存為圖片 📸</button>
                 <button class="nav-btn" onclick="closeReport()">返回主頁</button>
@@ -122,7 +125,6 @@
     </div>
 
     <canvas id="export-canvas" style="display:none;"></canvas>
-
     <script src="script.js"></script>
 </body>
 </html>
