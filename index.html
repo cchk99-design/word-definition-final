@@ -8,7 +8,7 @@
 </head>
 <body>
     <div id="bank-screen">
-        <h1 id="main-title" style="color: #5D4037; margin-top: 20px;">📺 超級無敵大電視</h1>
+        <h1 style="color: #5D4037; margin-top: 20px;">📺 超級無敵大電視</h1>
         
         <div class="sticky-controls">
             <div class="filter-zoom-bar">
@@ -51,7 +51,11 @@
         <div class="game-container">
             <div class="display-box">
                 <img id="current-img" src="" alt="Main Image">
-                <div id="current-label" class="object-name">名稱</div>
+                
+                <div id="label-container" class="hide-text">
+                    <div id="current-label" class="object-name">名稱</div>
+                </div>
+                <button id="toggle-text-btn" class="toggle-btn" onclick="toggleLabel()">顯示名稱 👁️</button>
             </div>
 
             <div class="hints-grid">
