@@ -1,13 +1,20 @@
 // 1. 定義 16 個類別
 const categories = [
-    { id: "fruits", name: "🍎 水果" }, { id: "veggies", name: "🥦 蔬菜" },
-    { id: "animals", name: "🐶 動物" }, { id: "colors", name: "🎨 顏色" },
-    { id: "occupation", name: "👨‍⚕️ 職業" }, { id: "toilet", name: "🚽 浴室用品" },
-    { id: "tableware", name: "🍽️ 餐具" }, { id: "drinks", name: "🍹 飲品" },
-    { id: "toys", name: "🧸 玩具" }, { id: "electronic", name: "💻 電器" },
-    { id: "furniture", name: "🛋️ 家具" }, { id: "stationery", name: "✏️ 文具" },
-    { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通" },
-    { id: "places", name: "🏢 地點" }, { id: "accessories", name: "🕶️ 配飾" }
+    { id: "fruits", name: " 水果" }, { id: "veggies", name: " 蔬菜" },
+    { id: "animals", name: " 動物" }, { id: "colors", name: " 顏色" },
+    { id: "occupation", name: " 職業" }, { id: "toilet", name: " 浴室用品" },
+    { id: "tableware", name: " 餐具" }, { id: "drinks", name: " 飲品" },
+    { id: "toys", name: " 玩具" }, { id: "electronic", name: " 電器" },
+    { id: "furniture", name: " 傢俬 1. 定義 16 個類別
+const categories = [
+    { id: "fruits", name: " 水果" }, { id: "veggies", name: " 蔬菜" },
+    { id: "animals", name: " 動物" }, { id: "colors", name: " 顏色" },
+    { id: "occupation", name: " 職業" }, { id: "toilet", name: " 浴室用品" },
+    { id: "tableware", name: " 餐具" }, { id: "drinks", name: " 飲品" },
+    { id: "toys", name: " 玩具" }, { id: "electronic", name: " 電器" },
+    { id: "furniture", name: " 傢俬" }, { id: "stationery", name: " 文具" },
+    { id: "clothing", name: " 衣物" }, { id: "transport", name: " 交通工具" },
+    { id: "places", name: " 地點" }, { id: "accessories", name: " 配飾" }
 ];
 
 // 2. 名稱對照表 (請按圖片編號 1, 2, 3 的順序填入)
