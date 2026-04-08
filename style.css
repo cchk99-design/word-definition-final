@@ -1,30 +1,121 @@
-body { font-family: "Microsoft JhengHei", sans-serif; background: #FFFDF0; margin: 0; padding: 20px; text-align: center; }
-.hidden { display: none; }
-.sticky-controls { position: sticky; top: 10px; background: white; padding: 15px; border-radius: 20px; border: 3px solid #FFCC00; margin-bottom: 20px; z-index: 100; }
+/* 基礎設定 */
+body { 
+    font-family: "Microsoft JhengHei", "Apple LiGothic Medium", sans-serif; 
+    background: #FFFDF0; 
+    margin: 0; 
+    padding: 10px; 
+    text-align: center;
+    -webkit-touch-callout: none; /* 防止 iPad 長按彈出選單 */
+}
 
-/* 網格卡片 */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; padding: 15px; }
-.vocab-card { background: white; border: 3px solid #FFCC00; border-radius: 12px; padding: 8px; cursor: pointer; }
+.hidden { display: none; }
+
+/* 頂部控制欄 */
+.sticky-controls { 
+    position: sticky; top: 10px; 
+    background: white; padding: 15px; 
+    border-radius: 20px; border: 3px solid #FFCC00; 
+    margin: 0 auto 20px; max-width: 90%; 
+    z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+}
+
+/* 網格卡片：適合觸控 */
+.grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+    gap: 20px; padding: 15px; 
+}
+.vocab-card { 
+    background: white; border: 3px solid #FFCC00; 
+    border-radius: 18px; padding: 10px; cursor: pointer; 
+}
 .vocab-card.selected { border-color: #03A9F4; background: #E1F5FE; }
 .vocab-card img { width: 100%; aspect-ratio: 1/1; object-fit: contain; }
-.vocab-card .label-text { font-size: 0.9rem; margin-top: 5px; color: #555; }
 
-/* 遊戲大圖 */
-.display-box { background: white; border-radius: 25px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-.display-box img { width: 350px; height: 350px; object-fit: contain; }
-.object-name { font-size: 2.5rem; font-weight: bold; color: #333; margin-top: 15px; border-top: 2px solid #EEE; padding-top: 10px; }
+/* --- 核心修改：iPad 左右佈局 --- */
+.game-container { 
+    display: flex; 
+    flex-direction: row; /* 強制左右並排 */
+    justify-content: center; 
+    align-items: center; 
+    gap: 40px; 
+    max-width: 1100px; 
+    margin: 20px auto; 
+    padding: 0 20px;
+}
 
-/* 翻轉提示卡 */
-.hints-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.flip-card { width: 120px; height: 120px; perspective: 1000px; cursor: pointer; }
-.flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+/* 左側圖片區 */
+.display-box { 
+    flex: 1.2; /* 圖片稍微佔大一點空間 */
+    background: white; 
+    border-radius: 30px; 
+    padding: 25px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.display-box img { 
+    width: 100%; 
+    max-width: 450px; /* iPad 上的理想大小 */
+    aspect-ratio: 1/1;
+    object-fit: contain; 
+}
+
+.object-name { 
+    font-size: 3.5rem; /* iPad 上文字要大 */
+    font-weight: bold; 
+    color: #333; 
+    margin-top: 20px; 
+}
+
+/* 右側提示區 */
+.hints-grid { 
+    flex: 1; 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; /* 2x2 提示卡 */
+    gap: 20px; 
+}
+
+.flip-card { 
+    width: 160px; /* 適合 iPad 點擊的大小 */
+    height: 160px; 
+    perspective: 1000px; 
+}
+
+.flip-card-inner { 
+    position: relative; width: 100%; height: 100%; 
+    transition: transform 0.6s; transform-style: preserve-3d; 
+}
 .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
-.card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; }
-.card-front { background: #EEE; font-size: 2rem; color: #BBB; }
-.card-back { transform: rotateY(180deg); color: white; }
-.hint-icon-img { width: 50%; margin-bottom: 5px; }
 
-.cat-bg { background: #03A9F4; } .feat-bg { background: #4CAF50; } .loc-bg { background: #FF9800; } .func-bg { background: #9C27B0; }
-.nav-btn { padding: 12px 30px; background: #FF9800; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; }
-.nav-btn.disabled { background: #CCC; cursor: not-allowed; }
-.back-btn { padding: 8px 15px; background: #5D4037; color: white; border-radius: 50px; border: none; cursor: pointer; }
+.card-front, .card-back { 
+    position: absolute; width: 100%; height: 100%; 
+    backface-visibility: hidden; border-radius: 20px; 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; 
+}
+
+.card-front { background: #EEE; font-size: 3rem; color: #BBB; }
+.card-back { transform: rotateY(180deg); color: white; font-size: 1.2rem; font-weight: bold;}
+.hint-icon-img { width: 60%; margin-bottom: 10px; }
+
+/* 顏色設定 */
+.cat-bg { background: #03A9F4; } .feat-bg { background: #4CAF50; } 
+.loc-bg { background: #FF9800; } .func-bg { background: #9C27B0; }
+
+/* 控制按鈕 */
+.header-nav, .footer-nav { padding: 20px; }
+.nav-btn { 
+    padding: 15px 40px; font-size: 1.5rem; 
+    background: #FF9800; color: white; 
+    border: none; border-radius: 50px; font-weight: bold; 
+}
+.back-btn { padding: 12px 25px; font-size: 1.2rem; background: #5D4037; color: white; border-radius: 50px; border: none;}
+
+/* 適應手機 (如果用 iPhone 看，會變回上下排列) */
+@media (max-width: 768px) {
+    .game-container { flex-direction: column; }
+    .display-box img { max-width: 300px; }
+    .flip-card { width: 140px; height: 140px; }
+}
