@@ -31,7 +31,7 @@ const vocabData = {
 let vocabItems = [];
 let selectedIds = new Set();
 let gameQueue = [];
-let gameRecords = {}; // 紀錄提示使用狀況
+let gameRecords = {};
 let currentIdx = 0;
 let currentFilter = "all";
 
@@ -39,10 +39,7 @@ function init() {
     let globalId = 1;
     Object.keys(vocabData).forEach(catId => {
         vocabData[catId].forEach((name, index) => {
-            vocabItems.push({
-                id: globalId++, cat: catId, name: name,
-                img: `images/vocab/${catId} (${index + 1}).png`
-            });
+            vocabItems.push({ id: globalId++, cat: catId, name: name, img: `images/vocab/${catId} (${index + 1}).png` });
         });
     });
     const filterSelect = document.getElementById('category-filter');
@@ -88,18 +85,16 @@ function toggleCategory(catId) {
     const items = vocabItems.filter(i => i.cat === catId);
     const allSelected = items.every(i => selectedIds.has(i.id));
     items.forEach(i => allSelected ? selectedIds.delete(i.id) : selectedIds.add(i.id));
-    renderBank();
-    updateUI();
+    renderBank(); updateUI();
 }
 
 function updateUI() {
     document.getElementById('selected-count').innerText = selectedIds.size;
-    const startBtn = document.getElementById('start-btn');
-    startBtn.disabled = selectedIds.size === 0;
+    document.getElementById('start-btn').disabled = selectedIds.size === 0;
 }
 
 function resetSelection() {
-    if (confirm("確定要重設嗎？")) { selectedIds.clear(); renderBank(); updateUI(); }
+    if (confirm("重設所有選擇？")) { selectedIds.clear(); renderBank(); updateUI(); }
 }
 
 function adjustZoom() {
@@ -126,10 +121,8 @@ function toggleFlip(el, hintType) {
 
 function startSelectedGame() {
     gameQueue = vocabItems.filter(item => selectedIds.has(item.id));
-    gameRecords = {}; // 重置紀錄
-    if (document.getElementById('order-mode').value === 'random') {
-        gameQueue.sort(() => Math.random() - 0.5);
-    }
+    gameRecords = {};
+    if (document.getElementById('order-mode').value === 'random') gameQueue.sort(() => Math.random() - 0.5);
     currentIdx = 0;
     document.getElementById('bank-screen').classList.add('hidden');
     document.getElementById('game-screen').classList.remove('hidden');
@@ -152,34 +145,53 @@ function nextPhoto() {
     else { showReport(); }
 }
 
-function prevPhoto() {
-    if (currentIdx > 0) { currentIdx--; loadStage(); }
-}
+function prevPhoto() { if (currentIdx > 0) { currentIdx--; loadStage(); } }
 
 function showReport() {
     const tbody = document.getElementById('report-body');
     tbody.innerHTML = '';
     gameQueue.forEach(item => {
         const r = gameRecords[item.id] || { 類別:0, 特徵:0, 地點:0, 用途:0 };
-        tbody.innerHTML += `<tr>
-            <td><strong>${item.name}</strong></td>
-            <td>${r.類別 ? '<span class="used-mark">✔</span>' : '<span class="unused-mark">-</span>'}</td>
-            <td>${r.特徵 ? '<span class="used-mark">✔</span>' : '<span class="unused-mark">-</span>'}</td>
-            <td>${r.地點 ? '<span class="used-mark">✔</span>' : '<span class="unused-mark">-</span>'}</td>
-            <td>${r.用途 ? '<span class="used-mark">✔</span>' : '<span class="unused-mark">-</span>'}</td>
-        </tr>`;
+        tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td>
+            <td>${r.類別 ? '<span class="used-mark">✔</span>' : '-'}</td>
+            <td>${r.特徵 ? '<span class="used-mark">✔</span>' : '-'}</td>
+            <td>${r.地點 ? '<span class="used-mark">✔</span>' : '-'}</td>
+            <td>${r.用途 ? '<span class="used-mark">✔</span>' : '-'}</td></tr>`;
     });
     document.getElementById('report-overlay').classList.remove('hidden');
 }
 
-function closeReport() {
-    document.getElementById('report-overlay').classList.add('hidden');
-    exitGame();
+async function exportReportAsImage() {
+    const canvas = document.getElementById('export-canvas');
+    const ctx = canvas.getContext('2d');
+    const name = document.getElementById('student-name').value || "未填寫";
+    const table = document.getElementById('report-table');
+    
+    const rows = table.rows.length, cols = table.rows[0].cells.length;
+    const cw = 120, ch = 50;
+    canvas.width = cw * cols + 40; canvas.height = ch * rows + 140;
+
+    ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#5D4037"; ctx.font = "bold 26px Microsoft JhengHei"; ctx.fillText("超級無敵大電視 - 練習紀錄", 20, 45);
+    ctx.font = "bold 20px Microsoft JhengHei"; ctx.fillStyle = "#0288D1"; ctx.fillText(`學生姓名：${name}`, 20, 85);
+    ctx.font = "14px Microsoft JhengHei"; ctx.fillStyle = "#999"; ctx.fillText(`日期：${new Date().toLocaleString()}`, 380, 85);
+
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            const x = 20 + c * cw, y = 110 + r * ch;
+            ctx.strokeStyle = "#CCC"; ctx.strokeRect(x, y, cw, ch);
+            const text = table.rows[r].cells[c].innerText;
+            ctx.fillStyle = (text === "✔") ? "#E53935" : "#333";
+            ctx.font = (r === 0 || c === 0) ? "bold 18px Microsoft JhengHei" : "18px Microsoft JhengHei";
+            ctx.fillText(text, x + (cw - ctx.measureText(text).width)/2, y + 32);
+        }
+    }
+    const link = document.createElement('a');
+    link.download = `紀錄_${name}_${new Date().getTime()}.png`;
+    link.href = canvas.toDataURL(); link.click();
 }
 
-function exitGame() {
-    document.getElementById('game-screen').classList.add('hidden');
-    document.getElementById('bank-screen').classList.remove('hidden');
-}
+function closeReport() { document.getElementById('report-overlay').classList.add('hidden'); exitGame(); }
+function exitGame() { document.getElementById('game-screen').classList.add('hidden'); document.getElementById('bank-screen').classList.remove('hidden'); }
 
 init();
