@@ -19,7 +19,7 @@
                     <label>🔀 排序：</label>
                     <select id="order-mode">
                         <option value="sequence">依類別順序</option>
-                        <option value="random">隨機亂序</option>
+                        <option value="random">隨機顯示</option>
                     </select>
                 </div>
                 <div class="control-group">
@@ -30,7 +30,7 @@
             <div id="selection-bar">
                 <span>已選項目：<strong id="selected-count">0</strong></span>
                 <button id="reset-btn" class="nav-btn reset-btn" onclick="resetSelection()">重設選擇 🔄</button>
-                <button id="start-btn" class="nav-btn disabled" onclick="startSelectedGame()" disabled>開始挑戰 ▶️</button>
+                <button id="start-btn" class="nav-btn disabled" onclick="startSelectedGame()" disabled>開始練習 ▶️</button>
             </div>
         </div>
         <div id="bank-content"></div>
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="hints-grid">
-                <div class="flip-card" onclick="toggleFlip(this)">
+                <div class="flip-card" onclick="toggleFlip(this, '類別')">
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back cat-bg">
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flip-card" onclick="toggleFlip(this)">
+                <div class="flip-card" onclick="toggleFlip(this, '特徵')">
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back feat-bg">
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flip-card" onclick="toggleFlip(this)">
+                <div class="flip-card" onclick="toggleFlip(this, '地點')">
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back loc-bg">
@@ -82,7 +82,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flip-card" onclick="toggleFlip(this)">
+                <div class="flip-card" onclick="toggleFlip(this, '用途')">
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back func-bg">
@@ -98,6 +98,22 @@
             <button id="next-btn" class="nav-btn" onclick="nextPhoto()">下一個 ➡️</button>
         </div>
     </div>
+
+    <div id="report-overlay" class="hidden">
+        <div class="report-card">
+            <h2>📊 練習紀錄表</h2>
+            <div class="report-scroll">
+                <table id="report-table">
+                    <thead>
+                        <tr><th>項目</th><th>類別</th><th>特徵</th><th>地點</th><th>用途</th></tr>
+                    </thead>
+                    <tbody id="report-body"></tbody>
+                </table>
+            </div>
+            <button class="nav-btn" onclick="closeReport()">返回主頁</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
