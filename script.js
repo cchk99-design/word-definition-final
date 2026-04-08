@@ -4,8 +4,8 @@ const categories = [
     { id: "occupation", name: "👨‍⚕️ 職業" }, { id: "toilet", name: "🚽 浴室用品" },
     { id: "tableware", name: "🍽️ 餐具" }, { id: "drinks", name: "🍹 飲品" },
     { id: "toys", name: "🧸 玩具" }, { id: "electronic", name: "💻 電器" },
-    { id: "furniture", name: "🛋️ 家具" }, { id: "stationery", name: "✏️ 文具" },
-    { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通" },
+    { id: "furniture", name: "🛋️ 傢俬" }, { id: "stationery", name: "✏️ 文具" },
+    { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通工具" },
     { id: "places", name: "🏢 地點" }, { id: "accessories", name: "🕶️ 配飾" }
 ];
 
@@ -33,6 +33,7 @@ let selectedIds = new Set();
 let gameQueue = [];
 let currentIdx = 0;
 let currentFilter = "all";
+let isLabelVisible = false;
 
 function init() {
     let globalId = 1;
@@ -76,7 +77,7 @@ function renderBank() {
         if (items.length === 0) return;
 
         const section = document.createElement('div');
-        section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:5px solid #FFCC00; padding-left:12px;">${cat.name}</h3>`;
+        section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:6px solid #FFCC00; padding-left:12px;">${cat.name}</h3>`;
         const grid = document.createElement('div');
         grid.className = 'grid';
         items.forEach(item => {
@@ -95,21 +96,32 @@ function renderBank() {
     });
 }
 
-function updateUI() {
-    document.getElementById('selected-count').innerText = selectedIds.size;
-    const startBtn = document.getElementById('start-btn');
-    const resetBtn = document.getElementById('reset-btn');
-    startBtn.disabled = selectedIds.size === 0;
-    startBtn.className = `nav-btn ${selectedIds.size === 0 ? 'disabled' : ''}`;
-    resetBtn.style.opacity = selectedIds.size === 0 ? "0.5" : "1";
-}
-
 function resetSelection() {
     if (selectedIds.size === 0) return;
-    if (confirm("確定要清除所有已選圖片嗎？")) {
+    if (confirm("確定要重設所有選擇嗎？")) {
         selectedIds.clear();
         renderBank();
         updateUI();
+    }
+}
+
+function updateUI() {
+    document.getElementById('selected-count').innerText = selectedIds.size;
+    const startBtn = document.getElementById('start-btn');
+    startBtn.disabled = selectedIds.size === 0;
+    startBtn.className = `nav-btn ${selectedIds.size === 0 ? 'disabled' : ''}`;
+}
+
+function toggleLabel() {
+    const container = document.getElementById('label-container');
+    const btn = document.getElementById('toggle-text-btn');
+    isLabelVisible = !isLabelVisible;
+    if (isLabelVisible) {
+        container.className = "show-text";
+        btn.innerText = "隱藏名稱 🙈";
+    } else {
+        container.className = "hide-text";
+        btn.innerText = "顯示名稱 👁️";
     }
 }
 
@@ -132,17 +144,20 @@ function loadStage() {
     document.getElementById('current-img').src = item.img;
     document.getElementById('current-label').innerText = item.name;
     document.getElementById('game-progress').innerText = `${currentIdx + 1} / ${gameQueue.length}`;
+    
+    // 重置狀態
     document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+    isLabelVisible = false;
+    document.getElementById('label-container').className = "hide-text";
+    document.getElementById('toggle-text-btn').innerText = "顯示名稱 👁️";
     
     document.getElementById('prev-btn').disabled = (currentIdx === 0);
-    const nextBtn = document.getElementById('next-btn');
-    nextBtn.innerText = (currentIdx === gameQueue.length - 1) ? "完成 🏁" : "下一個 ➡️";
+    document.getElementById('next-btn').innerText = (currentIdx === gameQueue.length - 1) ? "完成 🏁" : "下一個 ➡️";
 }
 
 function nextPhoto() {
-    if (currentIdx < gameQueue.length - 1) {
-        currentIdx++; loadStage();
-    } else { alert("練習完成！"); exitGame(); }
+    if (currentIdx < gameQueue.length - 1) { currentIdx++; loadStage(); }
+    else { exitGame(); }
 }
 
 function prevPhoto() {
