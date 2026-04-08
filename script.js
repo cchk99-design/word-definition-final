@@ -1,16 +1,14 @@
-// 1. 定義 16 個類別
 const categories = [
-    { id: "fruits", name: " 水果" }, { id: "veggies", name: " 蔬菜" },
-    { id: "animals", name: " 動物" }, { id: "colors", name: " 顏色" },
-    { id: "occupation", name: " 職業" }, { id: "toilet", name: " 浴室用品" },
-    { id: "tableware", name: " 餐具" }, { id: "drinks", name: " 飲品" },
-    { id: "toys", name: " 玩具" }, { id: "electronic", name: " 電器" },
-    { id: "furniture", name: " 傢俬" }, { id: "stationery", name: " 文具" },
-    { id: "clothing", name: " 衣物" }, { id: "transport", name: " 交通工具" },
-    { id: "places", name: " 地點" }, { id: "accessories", name: " 配飾" }
+    { id: "fruits", name: "🍎 水果" }, { id: "veggies", name: "🥦 蔬菜" },
+    { id: "animals", name: "🐶 動物" }, { id: "colors", name: "🎨 顏色" },
+    { id: "occupation", name: "👨‍⚕️ 職業" }, { id: "toilet", name: "🚽 浴室用品" },
+    { id: "tableware", name: "🍽️ 餐具" }, { id: "drinks", name: "🍹 飲品" },
+    { id: "toys", name: "🧸 玩具" }, { id: "electronic", name: "💻 電器" },
+    { id: "furniture", name: "🛋️ 家具" }, { id: "stationery", name: "✏️ 文具" },
+    { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通" },
+    { id: "places", name: "🏢 地點" }, { id: "accessories", name: "🕶️ 配飾" }
 ];
 
-// 2. 名稱對照表 (請按圖片編號 1, 2, 3 的順序填入)
 const vocabData = {
     fruits: ["龍眼", "哈密瓜", "士多啤梨","奇異果","提子","木瓜","楊桃","榴槤","橙","檸檬","火龍果","牛油果","芒果","荔枝","菠蘿","藍莓","蘋果","西瓜","車厘子","香蕉"], 
     veggies: ["黃椒", "南瓜","娃娃菜","椰菜","椰菜花","洋蔥","生菜","番薯","白菜","粟米","紅椒","紅蘿蔔","矮瓜/茄子","菜心","菠菜","番茄","薯仔","蘑菇","白蘿蔔","西蘭花","辣椒","青椒","青瓜","青豆"],
@@ -30,17 +28,17 @@ const vocabData = {
     accessories: ["眼鏡", "頸鍊","手鍊","耳環","戒指","手錶","髮夾","銀包","書包","手袋","遮"]
 };
 
-// 3. 自動生成清單
 const vocabItems = [];
 let globalId = 1;
 
+// 初始化清單
 Object.keys(vocabData).forEach(catId => {
     vocabData[catId].forEach((name, index) => {
         vocabItems.push({
             id: globalId++,
             cat: catId,
             name: name,
-            img: `images/vocab/${catId} (${index + 1}).png` // Windows 格式
+            img: `images/vocab/${catId} (${index + 1}).png` 
         });
     });
 });
@@ -49,18 +47,30 @@ let selectedIds = new Set();
 let gameQueue = [];
 let currentIdx = 0;
 
+// 【重要】圖片錯誤處理與除錯
+document.addEventListener('error', function (e) {
+    if (e.target.tagName === 'IMG') {
+        const currentSrc = e.target.getAttribute('src');
+        // 嘗試自動修正副檔名（如果 png 不行試試 PNG）
+        if (currentSrc.endsWith('.png')) {
+            e.target.src = currentSrc.replace('.png', '.PNG');
+        } else {
+            console.error("無法加載圖片路徑：", currentSrc);
+            e.target.src = "https://via.placeholder.com/300?text=Check+Path+In+GitHub";
+        }
+    }
+}, true);
+
 function renderBank() {
     const container = document.getElementById('bank-content');
     container.innerHTML = '';
     categories.forEach(cat => {
         const items = vocabItems.filter(i => i.cat === cat.id);
         if (items.length === 0) return;
-
         const section = document.createElement('div');
         section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:5px solid #FFCC00; padding-left:10px;">${cat.name}</h3>`;
         const grid = document.createElement('div');
         grid.className = 'grid';
-        
         items.forEach(item => {
             const card = document.createElement('div');
             card.className = `vocab-card ${selectedIds.has(item.id) ? 'selected' : ''}`;
@@ -103,9 +113,7 @@ function loadStage() {
 function nextPhoto() {
     if (currentIdx < gameQueue.length - 1) {
         currentIdx++; loadStage();
-    } else {
-        exitGame();
-    }
+    } else { exitGame(); }
 }
 
 function exitGame() {
