@@ -3,13 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>超級無敵大電視 Master Final</title>
+    <title>超級無敵大電視 Master Final - Pro 版</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="bank-screen">
-        <h1 style="color: #5D4037; margin-top: 20px;">🌟 超級無敵大電視：全系列教材</h1>
+        <h1 style="color: #5D4037; margin-top: 20px;">🌟 超級無敵大電視</h1>
+        
         <div class="sticky-controls">
+            <div class="filter-zoom-bar">
+                <div class="control-group">
+                    <label>📂 分類：</label>
+                    <select id="category-filter" onchange="filterCategory()">
+                        <option value="all">顯示全部</option>
+                        </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>🔍 縮放：</label>
+                    <input type="range" id="zoom-slider" min="100" max="300" value="160" oninput="adjustZoom()">
+                </div>
+            </div>
+
             <div id="selection-bar">
                 <span>已選：<strong id="selected-count">0</strong> 項目</span>
                 <button id="start-btn" class="nav-btn disabled" onclick="startSelectedGame()" disabled>開始練習 ▶️</button>
@@ -35,7 +50,7 @@
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back cat-bg">
-                            <img src="images/hints/hint-cat.png" class="hint-icon-img" data-type="hint">
+                            <img src="images/hints/hint-cat.png" class="hint-icon-img">
                             <span>類別</span>
                         </div>
                     </div>
@@ -44,7 +59,7 @@
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back feat-bg">
-                            <img src="images/hints/hint-feat.png" class="hint-icon-img" data-type="hint">
+                            <img src="images/hints/hint-feat.png" class="hint-icon-img">
                             <span>特徵</span>
                         </div>
                     </div>
@@ -53,7 +68,7 @@
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back loc-bg">
-                            <img src="images/hints/hint-loc.png" class="hint-icon-img" data-type="hint">
+                            <img src="images/hints/hint-loc.png" class="hint-icon-img">
                             <span>地點</span>
                         </div>
                     </div>
@@ -62,7 +77,7 @@
                     <div class="flip-card-inner">
                         <div class="card-front">？</div>
                         <div class="card-back func-bg">
-                            <img src="images/hints/hint-func.png" class="hint-icon-img" data-type="hint">
+                            <img src="images/hints/hint-func.png" class="hint-icon-img">
                             <span>用途</span>
                         </div>
                     </div>
