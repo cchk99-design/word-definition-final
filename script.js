@@ -5,7 +5,7 @@ const categories = [
     { id: "tableware", name: "🍽️ 餐具" }, { id: "drinks", name: "🍹 飲品" },
     { id: "toys", name: "🧸 玩具" }, { id: "electronic", name: "💻 電器" },
     { id: "furniture", name: "🛋️ 家具" }, { id: "stationery", name: "✏️ 文具" },
-    { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通工具" },
+    { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通" },
     { id: "places", name: "🏢 地點" }, { id: "accessories", name: "🕶️ 配飾" }
 ];
 
@@ -34,7 +34,6 @@ let gameQueue = [];
 let currentIdx = 0;
 let currentFilter = "all";
 
-// 初始化
 function init() {
     let globalId = 1;
     Object.keys(vocabData).forEach(catId => {
@@ -77,7 +76,7 @@ function renderBank() {
         if (items.length === 0) return;
 
         const section = document.createElement('div');
-        section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:5px solid #FFCC00; padding-left:10px;">${cat.name}</h3>`;
+        section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:5px solid #FFCC00; padding-left:12px;">${cat.name}</h3>`;
         const grid = document.createElement('div');
         grid.className = 'grid';
         items.forEach(item => {
@@ -98,9 +97,20 @@ function renderBank() {
 
 function updateUI() {
     document.getElementById('selected-count').innerText = selectedIds.size;
-    const btn = document.getElementById('start-btn');
-    btn.disabled = selectedIds.size === 0;
-    btn.className = `nav-btn ${selectedIds.size === 0 ? 'disabled' : ''}`;
+    const startBtn = document.getElementById('start-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    startBtn.disabled = selectedIds.size === 0;
+    startBtn.className = `nav-btn ${selectedIds.size === 0 ? 'disabled' : ''}`;
+    resetBtn.style.opacity = selectedIds.size === 0 ? "0.5" : "1";
+}
+
+function resetSelection() {
+    if (selectedIds.size === 0) return;
+    if (confirm("確定要清除所有已選圖片嗎？")) {
+        selectedIds.clear();
+        renderBank();
+        updateUI();
+    }
 }
 
 function startSelectedGame() {
@@ -122,10 +132,8 @@ function loadStage() {
     document.getElementById('current-img').src = item.img;
     document.getElementById('current-label').innerText = item.name;
     document.getElementById('game-progress').innerText = `${currentIdx + 1} / ${gameQueue.length}`;
-    
     document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
     
-    // 按鈕狀態控制
     document.getElementById('prev-btn').disabled = (currentIdx === 0);
     const nextBtn = document.getElementById('next-btn');
     nextBtn.innerText = (currentIdx === gameQueue.length - 1) ? "完成 🏁" : "下一個 ➡️";
@@ -138,9 +146,7 @@ function nextPhoto() {
 }
 
 function prevPhoto() {
-    if (currentIdx > 0) {
-        currentIdx--; loadStage();
-    }
+    if (currentIdx > 0) { currentIdx--; loadStage(); }
 }
 
 function exitGame() {
