@@ -39,9 +39,7 @@ function init() {
     Object.keys(vocabData).forEach(catId => {
         vocabData[catId].forEach((name, index) => {
             vocabItems.push({
-                id: globalId++,
-                cat: catId,
-                name: name,
+                id: globalId++, cat: catId, name: name,
                 img: `images/vocab/${catId} (${index + 1}).png`
             });
         });
@@ -50,8 +48,7 @@ function init() {
     const filterSelect = document.getElementById('category-filter');
     categories.forEach(cat => {
         const opt = document.createElement('option');
-        opt.value = cat.id;
-        opt.textContent = cat.name;
+        opt.value = cat.id; opt.textContent = cat.name;
         filterSelect.appendChild(opt);
     });
     renderBank();
@@ -97,10 +94,8 @@ function renderBank() {
 
 function resetSelection() {
     if (selectedIds.size === 0) return;
-    if (confirm("確定要重設所有選擇嗎？")) {
-        selectedIds.clear();
-        renderBank();
-        updateUI();
+    if (confirm("確定要清除所有已選圖片嗎？")) {
+        selectedIds.clear(); renderBank(); updateUI();
     }
 }
 
@@ -111,7 +106,6 @@ function updateUI() {
     startBtn.className = `nav-btn ${selectedIds.size === 0 ? 'disabled' : ''}`;
 }
 
-// 核心功能：同步勾選框與文字顯示狀態
 function syncLabelWithCheck() {
     const isChecked = document.getElementById('always-show-check').checked;
     const container = document.getElementById('label-container');
@@ -138,12 +132,10 @@ function loadStage() {
     document.getElementById('current-label').innerText = item.name;
     document.getElementById('game-progress').innerText = `${currentIdx + 1} / ${gameQueue.length}`;
     
-    // 重置翻牌
+    // --- 核心修正：每關重置提示卡為隱藏狀態 ---
     document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
     
-    // 每一關加載時檢查勾選框，決定文字是否直接顯示
     syncLabelWithCheck();
-    
     document.getElementById('prev-btn').disabled = (currentIdx === 0);
     document.getElementById('next-btn').innerText = (currentIdx === gameQueue.length - 1) ? "完成 🏁" : "下一個 ➡️";
 }
