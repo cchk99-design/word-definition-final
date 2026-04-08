@@ -4,7 +4,7 @@ const categories = [
     { id: "occupation", name: "👨‍⚕️ 職業" }, { id: "toilet", name: "🚽 浴室用品" },
     { id: "tableware", name: "🍽️ 餐具" }, { id: "drinks", name: "🍹 飲品" },
     { id: "toys", name: "🧸 玩具" }, { id: "electronic", name: "💻 電器" },
-    { id: "furniture", name: "🛋️ 家具" }, { id: "stationery", name: "✏️ 文具" },
+    { id: "furniture", name: "🛋️ 傢俬" }, { id: "stationery", name: "✏️ 文具" },
     { id: "clothing", name: "👕 衣物" }, { id: "transport", name: "🚗 交通工具" },
     { id: "places", name: "🏢 地點" }, { id: "accessories", name: "🕶️ 配飾" }
 ];
