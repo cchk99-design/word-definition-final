@@ -9,8 +9,9 @@ const categories = [
     { id: "places", name: "🏢 地點" }, { id: "accessories", name: "🕶️ 配飾" }
 ];
 
+// 這裡填入你的 16 個類別名稱
 const vocabData = {
-    fruits: ["龍眼", "哈密瓜", "士多啤梨","奇異果","提子","木瓜","楊桃","榴槤","橙","檸檬","火龍果","牛油果","芒果","荔枝","菠蘿","藍莓","蘋果","西瓜","車厘子","香蕉"], 
+     fruits: ["龍眼", "哈密瓜", "士多啤梨","奇異果","提子","木瓜","楊桃","榴槤","橙","檸檬","火龍果","牛油果","芒果","荔枝","菠蘿","藍莓","蘋果","西瓜","車厘子","香蕉"], 
     veggies: ["黃椒", "南瓜","娃娃菜","椰菜","椰菜花","洋蔥","生菜","番薯","白菜","粟米","紅椒","紅蘿蔔","矮瓜/茄子","菜心","菠菜","番茄","薯仔","蘑菇","白蘿蔔","西蘭花","辣椒","青椒","青瓜","青豆"],
     animals: ["烏龜","企鵝", "倉鼠", "兔子", "北極熊","大象","天鵝","斑馬","樹熊","河馬","熊","熊貓","牛","狐狸","狗","獅子","羊","老虎","老鼠","蛇","袋鼠","豬","豹","貓","貓頭鷹","長頸鹿","雞","馬","猴子/馬騮","駱駝","鱷魚","鴨","鸚鵡","鹿","麻雀"],
     colors: ["啡色", "紅色","黃色","黑色","藍色","橙色","紫色","粉紅色","綠色","白色","灰色"],
@@ -30,8 +31,9 @@ const vocabData = {
 
 const vocabItems = [];
 let globalId = 1;
+let currentFilter = "all";
 
-// 初始化清單
+// 初始化數據
 Object.keys(vocabData).forEach(catId => {
     vocabData[catId].forEach((name, index) => {
         vocabItems.push({
@@ -43,34 +45,45 @@ Object.keys(vocabData).forEach(catId => {
     });
 });
 
-let selectedIds = new Set();
-let gameQueue = [];
-let currentIdx = 0;
+// 初始化分類選單
+function initFilter() {
+    const filterSelect = document.getElementById('category-filter');
+    categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.id;
+        opt.textContent = cat.name;
+        filterSelect.appendChild(opt);
+    });
+}
 
-// 【重要】圖片錯誤處理與除錯
-document.addEventListener('error', function (e) {
-    if (e.target.tagName === 'IMG') {
-        const currentSrc = e.target.getAttribute('src');
-        // 嘗試自動修正副檔名（如果 png 不行試試 PNG）
-        if (currentSrc.endsWith('.png')) {
-            e.target.src = currentSrc.replace('.png', '.PNG');
-        } else {
-            console.error("無法加載圖片路徑：", currentSrc);
-            e.target.src = "https://via.placeholder.com/300?text=Check+Path+In+GitHub";
-        }
-    }
-}, true);
+// 縮放功能
+function adjustZoom() {
+    const val = document.getElementById('zoom-slider').value;
+    document.documentElement.style.setProperty('--card-size', val + 'px');
+}
+
+// 過濾功能
+function filterCategory() {
+    currentFilter = document.getElementById('category-filter').value;
+    renderBank();
+}
 
 function renderBank() {
     const container = document.getElementById('bank-content');
     container.innerHTML = '';
+    
     categories.forEach(cat => {
+        // 如果不是全部且不匹配當前過濾器，則跳過
+        if (currentFilter !== "all" && currentFilter !== cat.id) return;
+
         const items = vocabItems.filter(i => i.cat === cat.id);
         if (items.length === 0) return;
+
         const section = document.createElement('div');
         section.innerHTML = `<h3 style="text-align:left; margin-left:15px; border-left:5px solid #FFCC00; padding-left:10px;">${cat.name}</h3>`;
         const grid = document.createElement('div');
         grid.className = 'grid';
+        
         items.forEach(item => {
             const card = document.createElement('div');
             card.className = `vocab-card ${selectedIds.has(item.id) ? 'selected' : ''}`;
@@ -86,6 +99,11 @@ function renderBank() {
         container.appendChild(section);
     });
 }
+
+// 其他遊戲邏輯保持不變...
+let selectedIds = new Set();
+let gameQueue = [];
+let currentIdx = 0;
 
 function updateUI() {
     document.getElementById('selected-count').innerText = selectedIds.size;
@@ -124,4 +142,6 @@ function exitGame() {
 
 function toggleFlip(el) { el.classList.toggle('flipped'); }
 
+// 啟動
+initFilter();
 renderBank();
