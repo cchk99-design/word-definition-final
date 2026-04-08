@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>超級無敵大電視 Pro - Final Version</title>
+    <title>識字王 Pro - 全能教學版</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="bank-screen">
-        <h1 style="color: #5D4037; margin-top: 20px;">超級無敵大電視</h1>
+        <h1 id="main-title" style="color: #5D4037; margin-top: 20px;">🏫 識字王：全系列教材</h1>
         
         <div class="sticky-controls">
             <div class="filter-zoom-bar">
                 <div class="control-group">
                     <label>📂 分類：</label>
                     <select id="category-filter" onchange="filterCategory()">
-                        <option value="all">全部類別</option>
+                        <option value="all">顯示全部</option>
                     </select>
                 </div>
                 
@@ -34,7 +34,7 @@
             </div>
 
             <div id="selection-bar">
-                <span>已選：<strong id="selected-count">0</strong> 項目</span>
+                <span>已選項目：<strong id="selected-count">0</strong></span>
                 <button id="start-btn" class="nav-btn disabled" onclick="startSelectedGame()" disabled>開始練習 ▶️</button>
             </div>
         </div>
@@ -43,13 +43,13 @@
 
     <div id="game-screen" class="hidden">
         <div class="header-nav">
-            <button class="back-btn" onclick="exitGame()">⬅️ 返回</button>
+            <button class="back-btn" onclick="exitGame()">⬅️ 重選</button>
             <div id="game-progress">1 / 1</div>
         </div>
         
         <div class="game-container">
             <div class="display-box">
-                <img id="current-img" src="" alt="教學圖片">
+                <img id="current-img" src="" alt="Main Photo">
                 <div id="current-label" class="object-name">名稱</div>
             </div>
 
@@ -92,7 +92,11 @@
                 </div>
             </div>
         </div>
-        <div class="footer-nav"><button id="next-btn" class="nav-btn" onclick="nextPhoto()">下一個 ➡️</button></div>
+
+        <div class="footer-nav">
+            <button id="prev-btn" class="nav-btn secondary-btn" onclick="prevPhoto()">⬅️ 上一個</button>
+            <button id="next-btn" class="nav-btn" onclick="nextPhoto()">下一個 ➡️</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
